@@ -8,6 +8,7 @@ var points = 0;
 var seconds = 0;
 var reLetter = /^\S+$/;
 var totalPoints = 0;
+var totalTime = 0;
 	
 	function timer() {
 		seconds ++;
@@ -67,7 +68,7 @@ var totalPoints = 0;
 				document.getElementById("displayWord").style.display = "none";
 				document.getElementById('letter').style.display = "none";
 				document.getElementById('timer').style.display = "none";
-				document.getElementById('points').innerHTML = "You have " +totalPoints+ " points total!"; 
+				document.getElementById('points').innerHTML = "You have " +totalPoints+ " points total and " +totalTime+ " seconds total!"; 
 			}
 
 			for(var j=0; j < selectedWord.length; j++){
@@ -104,6 +105,7 @@ var totalPoints = 0;
 			trueAnswersArray.push({'word': selectedWord, 'point': points, 'time' : seconds });
 			totalPoints += points; 
 			points = 0;
+			totalTime += seconds;
 			seconds = 0;
 			answerLetter = [];
 			for(var i=0	; i < trueAnswersArray.length; i++){
