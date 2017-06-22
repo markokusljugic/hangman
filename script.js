@@ -9,6 +9,8 @@ var seconds = 0;
 var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
+
+
 	
 	function timer() {
 		seconds ++;
@@ -18,8 +20,9 @@ var totalTime = 0;
 	function insert() {
 		var insertWord  = document.getElementById("insertWord").value;
 		if(words.indexOf(insertWord) == -1){
-			words.push(insertWord);
-			localStorage.setItem('words', JSON.stringify(words));
+			words.push(insertWord);	
+			localStorage.setItem("words", JSON.stringify(words));
+			words = JSON.parse(localStorage.getItem("words"));
 		}
 		else{
 			document.getElementById('insertWord').style.borderColor= "red";
@@ -30,13 +33,14 @@ var totalTime = 0;
 	function search(){
 		var input = searchWord.value.toUpperCase();
 		var i =0 ;
-		document.getElementById('list').innerHTML = "words";	
+		document.getElementById('list').innerHTML = "";	
 			while (i < words.length) {
 				if(words[i].toUpperCase().indexOf(input) > -1){	
 					document.getElementById('list').innerHTML += "<option value='"+words[i]+"'></option>";	
 				}
 			i++;
 			}
+		
 	}
 
 	function start(){		
