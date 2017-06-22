@@ -6,7 +6,7 @@ var trueAnswersArray =[];
 var selectedWord;
 var points = 0;
 var seconds = 0;
-var reLetter = /^\S+$/;
+var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
 	
@@ -54,16 +54,14 @@ var totalTime = 0;
 		else{	
 			document.getElementById('first').style.display= "block";
 			document.getElementById('second').style.display= "none";
-			document.getElementById('searchWord').style.color= "red";
-
+			document.getElementById('searchWord').style.borderColor= "red";
+			document.getElementById('searchWord').value = "Please insert word!";
 		}
 	}
 
 	function next(){
 			selectedWord = words[Math.floor(Math.random() * words.length)];
 			trueWords = trueAnswersArray.map(function(a) {return a.word;});
-
-			console.log(trueWords);
 
 			if (words.length > trueAnswersArray.length){
 				if (trueWords.indexOf(selectedWord) > -1){
@@ -84,7 +82,7 @@ var totalTime = 0;
 	}
 
 	function check(){
-		var letter = document.getElementById('letter').value;
+		var letter = document.getElementById('letter').value;	
 		if(letter.length > 0 && answerLetter.indexOf(letter) == -1 && reLetter.test(letter)){
 			if (selectedWord.indexOf(letter) == -1){
 				points -= 0.25;
@@ -105,8 +103,7 @@ var totalTime = 0;
 			document.getElementById('points').innerHTML = "You have " +points+ " points!"; 
 			document.getElementById('displayWord').innerHTML =answerLetter.join (' ');
 		}
-		if(selectedWord === answerLetter.join("")){
-
+		if(selectedWord === answerLetter.join("")){	
 			document.getElementById('score').innerHTML = "";
 			trueAnswersArray.push({'word': selectedWord, 'point': points, 'time' : seconds });
 			totalPoints += points; 
@@ -118,5 +115,5 @@ var totalTime = 0;
 				document.getElementById('score').innerHTML += "<li>" +trueAnswersArray[i].word+" ("+trueAnswersArray[i].point+"points, " +trueAnswersArray[i].time+ "seconds)</li>";
 			}
 			next();
-		}		
+		}	
 	}
