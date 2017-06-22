@@ -17,8 +17,14 @@ var totalTime = 0;
 
 	function insert() {
 		var insertWord  = document.getElementById("insertWord").value;
-		words.push(insertWord);
-		localStorage.setItem('words', JSON.stringify(words));
+		if(words.indexOf(insertWord) == -1){
+			words.push(insertWord);
+			localStorage.setItem('words', JSON.stringify(words));
+		}
+		else{
+			document.getElementById('insertWord').style.borderColor= "red";
+			document.getElementById('insertWord').value = "Already exist!";
+		}
 	}
 
 	function search(){
