@@ -2,10 +2,12 @@ var words = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
 var sam = ['a', 'o', 'e', 'i', 'u'];
 document.getElementById('second').style.display= "none";
 var answerLetter = [];
-var trueWordsArray =[];
+var trueAnswersArray =[];
 var selectedWord;
 var points = 0;
 var seconds = 0;
+var reLetter = /^\S+$/;
+var totalPoints = 0;
 	
 	function timer() {
 		seconds ++;
@@ -15,6 +17,7 @@ var seconds = 0;
 	function insert() {
 		var insertWord  = document.getElementById("insertWord").value;
 		words.push(insertWord);
+		localStorage.setItem('words', JSON.stringify(words));
 	}
 
 	function search(){
@@ -45,24 +48,27 @@ var seconds = 0;
 			document.getElementById('first').style.display= "block";
 			document.getElementById('second').style.display= "none";
 			document.getElementById('searchWord').style.color= "red";
+
 		}
 	}
 
 	function next(){
 			selectedWord = words[Math.floor(Math.random() * words.length)];
-			trueWordJson = JSON.stringify(trueWordsArray);
-			if (words.length > trueWordsArray.length){
-				if (trueWordJson.indexOf(selectedWord) > -1){
+			trueWords = trueAnswersArray.map(function(a) {return a.word;});
+
+			console.log(trueWords);
+
+			if (words.length > trueAnswersArray.length){
+				if (trueWords.indexOf(selectedWord) > -1){
 					next();
 				}
 			}
 			else{
 				document.getElementById("displayWord").style.display = "none";
 				document.getElementById('letter').style.display = "none";
-				document.getElementById('points').style.display = "none";
 				document.getElementById('timer').style.display = "none";
+				document.getElementById('points').innerHTML = "You have " +totalPoints+ " points total!"; 
 			}
-
 
 			for(var j=0; j < selectedWord.length; j++){
 				answerLetter[j] = "_";
@@ -72,7 +78,7 @@ var seconds = 0;
 
 	function check(){
 		var letter = document.getElementById('letter').value;
-		if(letter.length > 0 && answerLetter.indexOf(letter) == -1){
+		if(letter.length > 0 && answerLetter.indexOf(letter) == -1 && reLetter.test(letter)){
 			if (selectedWord.indexOf(letter) == -1){
 				points -= 0.25;
 			}
@@ -95,12 +101,13 @@ var seconds = 0;
 		if(selectedWord === answerLetter.join("")){
 
 			document.getElementById('score').innerHTML = "";
-			trueWordsArray.push({'word': selectedWord, 'point': points, 'time' : seconds });
+			trueAnswersArray.push({'word': selectedWord, 'point': points, 'time' : seconds });
+			totalPoints += points; 
 			points = 0;
 			seconds = 0;
 			answerLetter = [];
-			for(var i=0	; i < trueWordsArray.length; i++){
-				document.getElementById('score').innerHTML += "<li>" +trueWordsArray[i].word+" ("+trueWordsArray[i].point+"points, " +trueWordsArray[i].time+ "seconds)</li>";
+			for(var i=0	; i < trueAnswersArray.length; i++){
+				document.getElementById('score').innerHTML += "<li>" +trueAnswersArray[i].word+" ("+trueAnswersArray[i].point+"points, " +trueAnswersArray[i].time+ "seconds)</li>";
 			}
 			next();
 		}		
