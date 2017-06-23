@@ -10,7 +10,8 @@ var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
 
-
+localStorage.setItem("words", JSON.stringify(words));
+words = JSON.parse(localStorage.getItem("words"));
 	
 	function timer() {
 		seconds ++;
@@ -21,8 +22,6 @@ var totalTime = 0;
 		var insertWord  = document.getElementById("insertWord").value;
 		if(words.indexOf(insertWord) == -1){
 			words.push(insertWord);	
-			localStorage.setItem("words", JSON.stringify(words));
-			words = JSON.parse(localStorage.getItem("words"));
 		}
 		else{
 			document.getElementById('insertWord').style.borderColor= "red";
