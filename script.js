@@ -17,6 +17,7 @@ words.push(localStorage.getItem("insertWordLS"));
 console.log(words);
 
 
+
 	function timer() {
 		seconds ++;
     	document.getElementById("timer").innerHTML = "Your time: " +seconds+ " seconds!";
