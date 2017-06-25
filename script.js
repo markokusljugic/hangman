@@ -10,19 +10,23 @@ var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
 
-localStorage.setItem("words", JSON.stringify(wordss));
-var words  = JSON.parse(localStorage.getItem("words"));
+
+localStorage.setItem("wordsLS", JSON.stringify(wordss));
+words  = JSON.parse(localStorage.getItem("wordsLS"));
+words.push(localStorage.getItem("insertWordLS"));
 console.log(words);
+
 
 	function timer() {
 		seconds ++;
     	document.getElementById("timer").innerHTML = "Your time: " +seconds+ " seconds!";
 	}
 
-	function insert() {
-		var insertWord  = document.getElementById("insertWord").value;
+	function insert() {	
+		insertWord  = document.getElementById("insertWord").value;
 		if(wordss.indexOf(insertWord) == -1){
-			wordss.push(insertWord);
+			localStorage.setItem("insertWordLS", insertWord);
+			location.reload();
 		}
 		else{
 			document.getElementById('insertWord').style.borderColor= "red";
