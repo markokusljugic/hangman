@@ -1,4 +1,4 @@
-var words = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
+var wordss = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
 var sam = ['a', 'o', 'e', 'i', 'u'];
 document.getElementById('second').style.display= "none";
 var answerLetter = [];
@@ -10,9 +10,10 @@ var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
 
-localStorage.setItem("words", JSON.stringify(words));
-words = JSON.parse(localStorage.getItem("words"));
-	
+localStorage.setItem("words", JSON.stringify(wordss));
+var words  = JSON.parse(localStorage.getItem("words"));
+console.log(words);
+
 	function timer() {
 		seconds ++;
     	document.getElementById("timer").innerHTML = "Your time: " +seconds+ " seconds!";
@@ -20,8 +21,8 @@ words = JSON.parse(localStorage.getItem("words"));
 
 	function insert() {
 		var insertWord  = document.getElementById("insertWord").value;
-		if(words.indexOf(insertWord) == -1){
-			words.push(insertWord);	
+		if(wordss.indexOf(insertWord) == -1){
+			wordss.push(insertWord);
 		}
 		else{
 			document.getElementById('insertWord').style.borderColor= "red";
