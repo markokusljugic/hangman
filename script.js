@@ -9,12 +9,14 @@ var seconds = 0;
 var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
-
+insertWordArray = JSON.parse(localStorage.getItem("insertWordLS")) || [];
 
 localStorage.setItem("wordsLS", JSON.stringify(wordss));
 words  = JSON.parse(localStorage.getItem("wordsLS"));
-words.push(localStorage.getItem("insertWordLS"));
-console.log(words);
+words1 = JSON.parse(localStorage.getItem("insertWordLS"))
+words = words.concat(words1);
+
+
 
 
 
@@ -26,7 +28,8 @@ console.log(words);
 	function insert() {	
 		insertWord  = document.getElementById("insertWord").value;
 		if(wordss.indexOf(insertWord) == -1){
-			localStorage.setItem("insertWordLS", insertWord);
+			insertWordArray.push(insertWord)
+			localStorage.setItem("insertWordLS", JSON.stringify(insertWordArray));
 			location.reload();
 		}
 		else{
