@@ -1,4 +1,4 @@
-var wordss = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
+wordsArray = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
 var sam = ['a', 'o', 'e', 'i', 'u'];
 document.getElementById('second').style.display= "none";
 var answerLetter = [];
@@ -9,12 +9,17 @@ var seconds = 0;
 var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
-insertWordArray = JSON.parse(localStorage.getItem("insertWordLS")) || [];
+insertWordArray = JSON.parse(localStorage.getItem("insertWordsLS")) || [];
 
-localStorage.setItem("wordsLS", JSON.stringify(wordss));
-words  = JSON.parse(localStorage.getItem("wordsLS"));
-words1 = JSON.parse(localStorage.getItem("insertWordLS"))
-words = words.concat(words1);
+localStorage.setItem("defaultWordsLS", JSON.stringify(wordsArray));
+defaultWords  = JSON.parse(localStorage.getItem("defaultWordsLS"));
+insertWords = JSON.parse(localStorage.getItem("insertWordsLS"))
+console.log(insertWords);
+words = defaultWords;
+if(insertWords !=null){
+words = defaultWords.concat(insertWords);
+}
+console.log(words);
 
 
 
@@ -27,9 +32,9 @@ words = words.concat(words1);
 
 	function insert() {	
 		insertWord  = document.getElementById("insertWord").value;
-		if(wordss.indexOf(insertWord) == -1){
+		if(words.indexOf(insertWord) == -1){
 			insertWordArray.push(insertWord)
-			localStorage.setItem("insertWordLS", JSON.stringify(insertWordArray));
+			localStorage.setItem("insertWordsLS", JSON.stringify(insertWordArray));
 			location.reload();
 		}
 		else{
