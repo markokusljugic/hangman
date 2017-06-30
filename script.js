@@ -1,4 +1,3 @@
-wordsArray = ['trava', 'lebac', 'prozor', 'sijalica', 'bigi'];
 var sam = ['a', 'o', 'e', 'i', 'u'];
 document.getElementById('second').style.display= "none";
 var answerLetter = [];
@@ -9,21 +8,13 @@ var seconds = 0;
 var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
-insertWordArray = JSON.parse(localStorage.getItem("insertWordsLS")) || [];
 
-localStorage.setItem("defaultWordsLS", JSON.stringify(wordsArray));
-defaultWords  = JSON.parse(localStorage.getItem("defaultWordsLS"));
-insertWords = JSON.parse(localStorage.getItem("insertWordsLS"))
-console.log(insertWords);
-words = defaultWords;
-if(insertWords !=null){
-words = defaultWords.concat(insertWords);
-}
+// insertUserArray = JSON.parse(localStorage.getItem("insertUsersLS")) || [];
+words = JSON.parse(localStorage.getItem("insertWordsLS")) || [];
+
+//insertUsers = JSON.parse(localStorage.getItem("insertUsersLS"));
+
 console.log(words);
-
-
-
-
 
 	function timer() {
 		seconds ++;
@@ -33,8 +24,8 @@ console.log(words);
 	function insert() {	
 		insertWord  = document.getElementById("insertWord").value;
 		if(words.indexOf(insertWord) == -1){
-			insertWordArray.push(insertWord)
-			localStorage.setItem("insertWordsLS", JSON.stringify(insertWordArray));
+			words.push(insertWord);
+			localStorage.setItem("insertWordsLS", JSON.stringify(words));
 			location.reload();
 		}
 		else{
@@ -43,19 +34,43 @@ console.log(words);
 		}
 	}
 
+/*	function insertU(){
+		insertUser  = document.getElementById("insertUser").value;
+		if(insertUserArray.indexOf(insertUser) == -1){
+			insertWordArray.push(insertUser);
+			localStorage.setItem("insertUsersLS", JSON.stringify(insertUserArray));
+			location.reload();
+		}
+		else{
+			document.getElementById('insertUser').style.borderColor= "red";
+			document.getElementById('insertUser').value = "Already exist!";
+		}
+	}
+*/
 	function search(){
 		var input = searchWord.value.toUpperCase();
 		var i =0 ;
 		document.getElementById('list').innerHTML = "";	
 			while (i < words.length) {
 				if(words[i].toUpperCase().indexOf(input) > -1){	
-					document.getElementById('list').innerHTML += "<option value='"+words[i]+"'></option>";	
+					document.getElementById('list').innerHTML += "<option value='"+words[i]+"'></option>" ;	
 				}
 			i++;
 			}
 		
 	}
 
+	function deleteWord(){	
+		deletedWord = document.getElementById('searchWord').value;
+		if(words.indexOf(deletedWord) > -1){
+			del = words.indexOf(deletedWord);
+			words.splice(del, 1);
+			localStorage.clear();
+			localStorage.setItem("insertWordsLS", JSON.stringify(words));
+			location.reload();
+		}
+	}
+		
 	function start(){		
 		document.getElementById('first').style.display= "none";
 		document.getElementById('second').style.display= "block";
