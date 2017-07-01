@@ -79,12 +79,19 @@ console.log(score);
 		
 	}
 
-	function deleteWord(){	
+	function deleteWordUser(){	
 		deletedWord = document.getElementById('searchWord').value;
+		deletedUser = document.getElementById('searchUser').value;
 		if(words.indexOf(deletedWord) > -1){
 			del = words.indexOf(deletedWord);
 			words.splice(del, 1);
 			localStorage.setItem("insertWordsLS", JSON.stringify(words));
+			location.reload();
+		}
+		else if(users.indexOf(deletedUser) > -1){
+			del = users.indexOf(deletedUser);
+			users.splice(del, 1);
+			localStorage.setItem("insertUsersLS", JSON.stringify(users));
 			location.reload();
 		}
 	}
