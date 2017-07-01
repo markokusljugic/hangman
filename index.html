@@ -5,8 +5,10 @@
 </head>
 <body>
 	<div id="first">
-		<input type="text" list="list" id="searchWord" onkeyup="search();" />
-		<datalist id="list"></datalist>
+		<input type="text" list="listWords" id="searchWord" onkeyup="searchWords();" />
+			<datalist id="listWords"></datalist>
+		<input type="text" list="listUsers" id="searchUser" onkeyup="searchUsers();" />
+			<datalist id="listUsers"></datalist>
 			<input type="button" value="Start" onclick="start();"/>
 			<input type="button" value="Delete" onclick="deleteWord();"/>
 		<input type="text" id="insertWord"/>
