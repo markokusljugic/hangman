@@ -5,16 +5,16 @@
 </head>
 <body>
 	<div id="first">
-		<input type="text" list="listWords" id="searchWord" onkeyup="searchWords();" />
+		<input type="text" list="listWords" id="searchWord" placeholder="Select word" onkeyup="searchWords();" />
 			<datalist id="listWords"></datalist>
-		<input type="text" list="listUsers" id="searchUser" onkeyup="searchUsers();" />
+		<input type="text" list="listUsers" id="searchUser" placeholder="Select user" onkeyup="searchUsers();" />
 			<datalist id="listUsers"></datalist>
 			<input type="button" value="Start" onclick="start();"/>
 			<input type="button" value="Delete" onclick="deleteWordUser();"/>
-		<input type="text" id="insertWord"/>
-			<input type="button" value="Insert" onclick="insert();"/>
-		<input type="text" id="insertUser"/>
-			<input type="button" value="Insert user" onclick="insertU();"/>
+		<input type="text" id="insertWord" placeholder="Insert word"/>
+			<input type="button" value="Insert word"  onclick="insert();"/>
+		<input type="text" id="insertUser" placeholder="Insert user"/>
+			<input type="button" value="Insert user"  onclick="insertU();"/>
 	</div>
 	<div id="second">
 		<input type="text" maxlength="1" minlength="1" id="letter" onkeypress="check();" placeholder="Enter a letter">

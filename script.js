@@ -97,7 +97,7 @@ console.log(score);
 	}
 	
 		
-	function start(){		
+	function start(){
 		document.getElementById('first').style.display= "none";
 		document.getElementById('second').style.display= "block";
 		selectedWord = document.getElementById('searchWord').value;
