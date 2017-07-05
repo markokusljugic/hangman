@@ -2,6 +2,26 @@
 <html>
 <head>
 	<title></title>
+	<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+ tr:nth-child(even) {
+    background-color: #eee;
+}
+ tr:nth-child(odd) {
+   background-color:#fff;
+}
+ th {
+    background-color: black;
+    color: white;
+}
+</style>
 </head>
 <body>
 	<div id="first">
@@ -11,11 +31,14 @@
 			<datalist id="listUsers"></datalist>
 			<input type="button" value="Start" onclick="start();"/>
 			<input type="button" value="Delete" onclick="deleteWordUser();"/>
+			<input type="button" value="Show score" onclick="showUserScore();"/>
+	
 		<input type="text" id="insertWord" placeholder="Insert word"/>
 			<input type="button" value="Insert word"  onclick="insert();"/>
 		<input type="text" id="insertUser" placeholder="Insert user"/>
 			<input type="button" value="Insert user"  onclick="insertU();"/>
 	</div>
+	<div id="userScore"> </div>
 	<div id="second">
 		<input type="text" maxlength="1" minlength="1" id="letter" onkeypress="check();" placeholder="Enter a letter">
 		 <p id="displayWord"> </p>

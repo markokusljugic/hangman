@@ -8,6 +8,8 @@ var seconds = 0;
 var reLetter = /\S+$/;
 var totalPoints = 0;
 var totalTime = 0;
+var timeStarted;
+var timeEnded;
 
 
 users = JSON.parse(localStorage.getItem("insertUsersLS")) || [];
@@ -15,11 +17,45 @@ words = JSON.parse(localStorage.getItem("insertWordsLS")) || [];
 score = JSON.parse(localStorage.getItem("scoreLS")) || [];
 
 
-
+usersInScore = score.map(function(a) {return a.name;});
+selectedUser = document.getElementById('searchUser').value;
 
 console.log(users);
 console.log(words);
 console.log(score);
+
+	function showUserScore(){
+		
+		showUser = document.getElementById('searchUser').value;
+		var table = "";
+
+		if(usersInScore.indexOf(showUser) > -1){
+			document.getElementById('first').style.display= "none";
+			for(var i=0; i<score.length; i++){
+				if(score[i].name == showUser){
+				document.getElementById('userScore').innerHTML += "<h1>" +score[i].name+ "</h1>";
+				gamesInScore = score[i].games.map(function(a) {return a.game;});
+					for(var j=0; j<gamesInScore.length;j++){
+						document.getElementById('userScore').innerHTML += "<h2>Game #"+(j+1)+" ["+score[i].games[j].time.totalPoints+ " p] ["+score[i].games[j].time.totalTime+ " sec]</h2>" ;
+				
+						table = "<table><tbody><tr><th>Number</th><th>Word</th><th>Points</th><th>Time</th></tr>";
+							for(var z=0; z<score[i].games[j].game.length; z++){
+								num = z+1;
+								table += "<tr><td>"+num+"</td><td>"+score[i].games[j].game[z].word+"</td><td>"+score[i].games[j].game[z].points+"</td><td>"+score[i].games[j].game[z].time+"</td></tr>" ;
+							}
+						table+= "</tbody> </table>";
+						document.getElementById('userScore').innerHTML += table;
+						document.getElementById('userScore').innerHTML += "<p>Game Started:"+score[i].games[j].time.gameStarted+"</p>" ;
+						document.getElementById('userScore').innerHTML += "<p>Game Finished:"+score[i].games[j].time.gameFinished+"</p>" ;
+					}
+				}	
+			}
+		}
+		else{
+			document.getElementById('searchUser').style.borderColor= "red";
+			document.getElementById('searchUser').value = "Noo scoreee!";
+		}
+	}
 
 	function timer() {
 		seconds ++;
@@ -95,6 +131,8 @@ console.log(score);
 			location.reload();
 		}
 	}
+
+	
 	
 		
 	function start(){
@@ -102,6 +140,8 @@ console.log(score);
 		document.getElementById('second').style.display= "block";
 		selectedWord = document.getElementById('searchWord').value;
 		selectedUser = document.getElementById('searchUser').value;
+		timeStarted = new Date().toLocaleString();
+
 		if(words.indexOf(selectedWord) == -1){
 			document.getElementById('first').style.display= "block";
 			document.getElementById('second').style.display= "none";
@@ -119,16 +159,27 @@ console.log(score);
 			for(var i=0; i < selectedWord.length; i++){
 				answerLetter[i] = "_";
 			}
+			if(usersInScore.indexOf(selectedUser) == -1){
+				score.push({'name': selectedUser, 'games' : [{'game': [], 'time':{'gameStarted': timeStarted}}]});
+				localStorage.setItem("scoreLS", JSON.stringify(score));
+			}
+			else{
+				for(var i = 0; i < score.length; i++) {
+					if(score[i].name == selectedUser){
+						score[i].games.push({'game': [], 'time':{'gameStarted': timeStarted}});
+						localStorage.setItem("scoreLS", JSON.stringify(score));
+					}
+				}
+			}
 			document.getElementById("displayWord").textContent = answerLetter.join(" ");
 			setInterval(timer, 1000);
 		}
 	}
 
 	function next(){
-			selectedWord = words[Math.floor(Math.random() * words.length)];
-			trueWords = trueAnswersArray.map(function(a) {return a.word;});
-			usersInScore = score.map(function(a) {return a.user;});
-
+		selectedWord = words[Math.floor(Math.random() * words.length)];
+		trueWords = trueAnswersArray.map(function(a) {return a.word;});
+			
 			if (words.length > trueAnswersArray.length){
 				if (trueWords.indexOf(selectedWord) > -1){
 					next();
@@ -141,23 +192,22 @@ console.log(score);
 				document.getElementById('score').innerHTML = "";
 				document.getElementById('points').innerHTML = "";
 
-				if(usersInScore.indexOf(selectedUser) == -1){
-					score.push({"user":selectedUser, "totalTime": totalTime, "totalPoints": totalPoints});
-					localStorage.setItem("scoreLS", JSON.stringify(score));
-				}
-				else{
-					for(var i = 0; i < score.length; i++) {
-					    if(score[i].user == selectedUser) {
-					        score.splice(i, 1);
-					        score.push({"user":selectedUser, "totalTime": totalTime, "totalPoints": totalPoints});
+				timeEnded = new Date().toLocaleString();
+				for(var j= 0; j<score.length; j++){
+				gamesInScore = score[j].games.map(function(a) {return a.game;});
+				timeInScore = score[j].games.map(function(a) {return a.time;});
+					for(var i=timeInScore.length-1; i<timeInScore.length;i++){
+						if(score[j].name == selectedUser){
+							score[j].games[i].time['totalPoints'] = totalPoints;
+							score[j].games[i].time['totalTime'] = totalTime;
+							score[j].games[i].time['gameFinished'] = timeEnded;			
 							localStorage.setItem("scoreLS", JSON.stringify(score));
-					    }
+						}
 					}
 				}
-				for(var i=0	; i < score.length; i++){
-					document.getElementById('score').innerHTML += "<table> <tr><th>Player name</th><th>Total points</th><th>Total Time</th></tr><tr><td>"+score[i].user+"</td><td>"+score[i].totalPoints+"</td><td>"+score[i].totalTime+"</td></tr></table>";
-				}
-			}
+				timeStarted = 0;
+				timeEnded = 0;
+			}  
 			for(var j=0; j < selectedWord.length; j++){
 				answerLetter[j] = "_";
 			}
@@ -186,11 +236,23 @@ console.log(score);
 			document.getElementById('points').innerHTML = "You have " +points+ " points!"; 
 			document.getElementById('displayWord').innerHTML =answerLetter.join (' ');
 		}
+
 		if(selectedWord === answerLetter.join("")){	
 			totalPoints += points; 
 			totalTime += seconds;
-			selectedUser = document.getElementById('searchUser').value;
+		
+			gamesInScore = score[0].games.map(function(a) {return a.game;});
 			trueAnswersArray.push({'word' :selectedWord});
+
+			for(var j= 0; j<score.length; j++){
+				gamesInScore = score[j].games.map(function(a) {return a.game;});
+				for(var i=gamesInScore.length-1; i<gamesInScore.length;i++){
+					if(score[j].name == selectedUser){
+						score[j].games[i].game.push({'word': selectedWord, 'time': seconds, 'points': points});
+						localStorage.setItem("scoreLS", JSON.stringify(score));
+					}
+				}
+			}	
 			points = 0;
 			seconds = 0;
 			answerLetter = [];		
