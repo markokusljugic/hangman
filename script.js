@@ -241,12 +241,11 @@ console.log(score);
 			totalPoints += points; 
 			totalTime += seconds;
 		
-			gamesInScore = score[0].games.map(function(a) {return a.game;});
 			trueAnswersArray.push({'word' :selectedWord});
 
 			for(var j= 0; j<score.length; j++){
-				gamesInScore = score[j].games.map(function(a) {return a.game;});
-				for(var i=gamesInScore.length-1; i<gamesInScore.length;i++){
+				gamessInScore = score[j].games.map(function(a) {return a.game;});
+				for(var i=gamessInScore.length-1; i<gamessInScore.length;i++){
 					if(score[j].name == selectedUser){
 						score[j].games[i].game.push({'word': selectedWord, 'time': seconds, 'points': points});
 						localStorage.setItem("scoreLS", JSON.stringify(score));
