@@ -10,6 +10,8 @@ var totalPoints = 0;
 var totalTime = 0;
 var timeStarted;
 var timeEnded;
+var allTime=0;
+var allPoints=0;
 
 
 users = JSON.parse(localStorage.getItem("insertUsersLS")) || [];
@@ -18,9 +20,10 @@ score = JSON.parse(localStorage.getItem("scoreLS")) || [];
 
 
 usersInScore = score.map(function(a) {return a.name;});
+usernames = users.map(function(a) {return a.username;});
 selectedUser = document.getElementById('searchUser').value;
 
-console.log(users);
+console.log(usernames);
 console.log(words);
 console.log(score);
 
@@ -32,23 +35,33 @@ console.log(score);
 		if(usersInScore.indexOf(showUser) > -1){
 			document.getElementById('first').style.display= "none";
 			for(var i=0; i<score.length; i++){
-				if(score[i].name == showUser){
-				document.getElementById('userScore').innerHTML += "<h1>" +score[i].name+ "</h1>";
-				gamesInScore = score[i].games.map(function(a) {return a.game;});
-					for(var j=0; j<gamesInScore.length;j++){
-						document.getElementById('userScore').innerHTML += "<h2>Game #"+(j+1)+" ["+score[i].games[j].time.totalPoints+ " p] ["+score[i].games[j].time.totalTime+ " sec]</h2>" ;
-				
-						table = "<table><tbody><tr><th>Number</th><th>Word</th><th>Points</th><th>Time</th></tr>";
-							for(var z=0; z<score[i].games[j].game.length; z++){
-								num = z+1;
-								table += "<tr><td>"+num+"</td><td>"+score[i].games[j].game[z].word+"</td><td>"+score[i].games[j].game[z].points+"</td><td>"+score[i].games[j].game[z].time+"</td></tr>" ;
+				if(score[i].name == showUser ){
+					for(var k=0; k<users.length; k++){
+						if(users[k].username == showUser){
+							gamesInScore = score[i].games.map(function(a) {return a.game;});
+							document.getElementById('userScore').innerHTML += "<div style='display: -webkit-box;'><img src=img/"+users[k].avatar+"> <h1> " +score[i].name+ "</h1> </div> <p> Register time: " +users[k].registerTime+ "</p>";
+							for(var j=0; j<gamesInScore.length;j++){
+								document.getElementById('userScore').innerHTML += "<h2>Game #"+(j+1)+" ["+score[i].games[j].time.totalPoints+ " p] ["+score[i].games[j].time.totalTime+ " sec]</h2>" ;
+								table = "<table><tbody><tr><th>Num</th><th>Word</th><th>Points</th><th>Time</th></tr>";
+								for(var z=0; z<score[i].games[j].game.length; z++){
+									num = z+1;
+									table += "<tr><td>"+num+"</td><td>"+score[i].games[j].game[z].word+"</td><td>"+score[i].games[j].game[z].points+"</td><td>"+score[i].games[j].game[z].time+"</td></tr>" ;
+								}
+								table+= "</tbody> </table>";
+								document.getElementById('userScore').innerHTML += table;
+								document.getElementById('userScore').innerHTML += "<p>Game Started:"+score[i].games[j].time.gameStarted+"</p>" ;
+								document.getElementById('userScore').innerHTML += "<p>Game Finished:"+score[i].games[j].time.gameFinished+"</p>" ;
+
+								allTime += score[i].games[j].time.totalTime;
+								allPoints += score[i].games[j].time.totalPoints;
+								score[i]['allTime'] = allTime;
+								score[i]['allPoints'] = allPoints;
+								localStorage.setItem("scoreLS", JSON.stringify(score));
 							}
-						table+= "</tbody> </table>";
-						document.getElementById('userScore').innerHTML += table;
-						document.getElementById('userScore').innerHTML += "<p>Game Started:"+score[i].games[j].time.gameStarted+"</p>" ;
-						document.getElementById('userScore').innerHTML += "<p>Game Finished:"+score[i].games[j].time.gameFinished+"</p>" ;
-					}
-				}	
+							document.getElementById('userScore').innerHTML += "<h3>["+gamesInScore.length+" games] [" +score[i].allPoints+" points] ["+score[i].allTime+" seconds] </h3>";
+						}
+					}	
+				}
 			}
 		}
 		else{
@@ -64,7 +77,6 @@ console.log(score);
 
 	function insert() {	
 		insertWord  = document.getElementById("insertWord").value;
-		console.log(insertWord);
 		if(words.indexOf(insertWord) == -1  && insertWord){
 			words.push(insertWord);
 			localStorage.setItem("insertWordsLS", JSON.stringify(words));
@@ -78,8 +90,11 @@ console.log(score);
 
 	function insertU(){
 		insertUser  = document.getElementById("insertUser").value;
-		if(users.indexOf(insertUser) == -1 && insertUser){
-			users.push(insertUser);
+		imageUrl = document.getElementById("imageUrl").value;
+		var filename = imageUrl.replace(/^.*\\/, "");
+		if(usernames.indexOf(insertUser) == -1 && insertUser){
+			registerTime = new Date().toLocaleString();
+			users.push({"username": insertUser, 'registerTime': registerTime, 'avatar': filename});
 			localStorage.setItem("insertUsersLS", JSON.stringify(users));
 			location.reload();
 		}
@@ -106,9 +121,9 @@ console.log(score);
 		var input = searchUser.value.toUpperCase();
 		var i =0 ;
 		document.getElementById('listUsers').innerHTML = "";	
-			while (i < users.length) {
-				if(users[i].toUpperCase().indexOf(input) > -1){	
-					document.getElementById('listUsers').innerHTML += "<option value='"+users[i]+"'></option>" ;	
+			while (i < usernames.length) {
+				if(usernames[i].toUpperCase().indexOf(input) > -1){	
+					document.getElementById('listUsers').innerHTML += "<option value='"+usernames[i]+"'></option>" ;	
 				}
 			i++;
 			}
@@ -124,10 +139,10 @@ console.log(score);
 			localStorage.setItem("insertWordsLS", JSON.stringify(words));
 			location.reload();
 		}
-		else if(users.indexOf(deletedUser) > -1){
-			del = users.indexOf(deletedUser);
-			users.splice(del, 1);
-			localStorage.setItem("insertUsersLS", JSON.stringify(users));
+		else if(usernames.indexOf(deletedUser) > -1){
+			del = usernames.indexOf(deletedUser);
+			usernames.splice(del, 1);
+			localStorage.setItem("insertUsersLS", JSON.stringify(usernames));
 			location.reload();
 		}
 	}
@@ -149,18 +164,18 @@ console.log(score);
 			document.getElementById('searchWord').value = "Please insert word!";
 		}
 		
-		else if ( users.indexOf(selectedUser) == -1 ){
+		else if ( usernames.indexOf(selectedUser) == -1 ){
 			document.getElementById('first').style.display= "block";
 			document.getElementById('second').style.display= "none";
 			document.getElementById('searchUser').style.borderColor= "red";
 			document.getElementById('searchUser').value = "Please select user!";
 		}
-		else if (words.indexOf(selectedWord) > -1 && users.indexOf(selectedUser) > -1){
+		else if (words.indexOf(selectedWord) > -1 && usernames.indexOf(selectedUser) > -1){
 			for(var i=0; i < selectedWord.length; i++){
 				answerLetter[i] = "_";
 			}
 			if(usersInScore.indexOf(selectedUser) == -1){
-				score.push({'name': selectedUser, 'games' : [{'game': [], 'time':{'gameStarted': timeStarted}}]});
+				score.push({'name': selectedUser, 'games' : [{'game': [], 'time':{'gameStarted': timeStarted}}],'allTime': {}, 'allPoints': {}});
 				localStorage.setItem("scoreLS", JSON.stringify(score));
 			}
 			else{
@@ -188,7 +203,7 @@ console.log(score);
 			else{
 				document.getElementById("displayWord").style.display = "none";
 				document.getElementById('letter').style.display = "none";
-				document.getElementById('timer').style.display = "none";
+				document.getElementById('timer').innerHTML += "You time is:";
 				document.getElementById('score').innerHTML = "";
 				document.getElementById('points').innerHTML = "";
 
@@ -207,6 +222,7 @@ console.log(score);
 				}
 				timeStarted = 0;
 				timeEnded = 0;
+				location.reload();
 			}  
 			for(var j=0; j < selectedWord.length; j++){
 				answerLetter[j] = "_";
@@ -240,11 +256,11 @@ console.log(score);
 		if(selectedWord === answerLetter.join("")){	
 			totalPoints += points; 
 			totalTime += seconds;
-		
 			trueAnswersArray.push({'word' :selectedWord});
 
 			for(var j= 0; j<score.length; j++){
 				gamessInScore = score[j].games.map(function(a) {return a.game;});
+				timeInScore = score[j].games.map(function(a) {return a.time;});	
 				for(var i=gamessInScore.length-1; i<gamessInScore.length;i++){
 					if(score[j].name == selectedUser){
 						score[j].games[i].game.push({'word': selectedWord, 'time': seconds, 'points': points});
